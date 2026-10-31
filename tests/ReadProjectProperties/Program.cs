@@ -35,7 +35,7 @@ namespace ReadProjectProperties
 
                 CallingContext propertyContext = new CallingContext();
 
-                propertyContext.Set("PropertyId", "11048");
+                propertyContext.Set("PropertyId", "11011");
                 propertyContext.Set("PropertyIndex", "0");
 
                 bool propertyResult = client.ExecuteAction(
