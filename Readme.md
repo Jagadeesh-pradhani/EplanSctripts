@@ -58,3 +58,12 @@ your EPLAN connection settings.
 ## License
 
 To be decided.
+
+
+#
+```
+dotnet new console -n EplanAutomation.Remote.Tests -o tests/EplanAutomation.Remote.Tests
+dotnet build tests/EplanAutomation.Remote.Tests/EplanAutomation.Remote.Tests.csproj
+dotnet run --project tests/EplanAutomation.Remote.Tests/EplanAutomation.Remote.Tests.csproj
+
+```
