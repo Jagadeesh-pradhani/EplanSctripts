@@ -13,66 +13,66 @@ namespace ReadProjectProperties
 
             try
             {
-                string host = "192.168.29.54";
-                string port = "49152";
+                Console.WriteLine("Connecting to EPLAN...");
 
-                Console.WriteLine("=================================");
-                Console.WriteLine("       EPLAN ACTION TESTER");
-                Console.WriteLine("=================================");
-
-                Console.WriteLine("\nConnecting to EPLAN...");
-
-                client.Connect(host, port);
+                client.Connect("192.168.29.54", "49152");
                 client.SynchronousMode = true;
 
-                Console.WriteLine("Connected successfully!");
+                Console.WriteLine("Connected!\n");
 
-                Console.WriteLine("\nTesting action: selectionset");
-                Console.WriteLine("Parameter: TYPE = PROJECT");
+                // Select the test page
+                CallingContext selectionContext = new CallingContext();
+                selectionContext.Set("TYPE", "PAGES");
 
-                CallingContext context = new CallingContext();
-                context.Set("TYPE", "PROJECT");
-
-                bool result = client.ExecuteAction(
-                    "selectionset",
-                    ref context
-                );
-
-                Console.WriteLine("\n========== RESULT ==========");
+                bool selectionResult = client.ExecuteAction(
+                    "selectionset", ref selectionContext);
 
                 Console.WriteLine(
-                    "Action returned: " + result
+                    "Selection action: " + selectionResult);
+
+                // Read page description
+                Console.WriteLine("\nReading page description...");
+
+                CallingContext propertyContext = new CallingContext();
+
+                propertyContext.Set("PropertyId", "11048");
+                propertyContext.Set("PropertyIndex", "0");
+
+                bool propertyResult = client.ExecuteAction(
+                    "XEsGetPagePropertyAction",
+                    ref propertyContext
                 );
 
-                if (result)
+                Console.WriteLine(
+                    "Property action: " + propertyResult);
+
+                object propertyValue;
+
+                if (propertyContext.Get(
+                    "PropertyValue", out propertyValue))
                 {
                     Console.WriteLine(
-                        "Action executed successfully."
-                    );
+                        "Page description: " + propertyValue);
                 }
                 else
                 {
                     Console.WriteLine(
-                        "Action failed or is unavailable."
-                    );
+                        "PropertyValue was not returned.");
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("\nERROR:");
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine(ex);
             }
             finally
             {
                 try
                 {
                     client.Disconnect();
-                    Console.WriteLine("\nDisconnected from EPLAN.");
+                    Console.WriteLine("\nDisconnected.");
                 }
-                catch
-                {
-                    // Connection may not have been established.
-                }
+                catch { }
             }
 
             Console.WriteLine("\nPress Enter to exit...");
