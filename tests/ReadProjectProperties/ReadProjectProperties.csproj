@@ -13,25 +13,38 @@
   <ItemGroup>
     <Compile Remove="ExportProjectInfo.cs" />
   </ItemGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+</PropertyGroup>
+
+<ItemGroup>
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+</ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Eplan.EplApi.Systemu">
-      <HintPath>E:\Eplan\Platform\2026.0.3\Bin\Eplan.EplApi.Systemu.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    
-    <Reference Include="Eplan.EplApi.Starteru">
-        <HintPath>E:\Eplan\Platform\2026.0.3\Bin\Eplan.EplApi.Starteru.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="Eplan.EplApi.Baseu">
-      <HintPath>E:\Eplan\Platform\2026.0.3\Bin\Eplan.EplApi.Baseu.dll</HintPath>
+    <Reference Include="Eplan.EplApi.RemoteClientu">
+      <HintPath>E:\Eplan\Platform\2026.0.3\Bin\Eplan.EplApi.RemoteClientu.dll</HintPath>
       <Private>false</Private>
     </Reference>
 
-    <Reference Include="Eplan.EplApi.DataModelu">
-      <HintPath>E:\Eplan\Platform\2026.0.3\Bin\Eplan.EplApi.DataModelu.dll</HintPath>
+    <Reference Include="Eplan.EplApi.Remotingu">
+      <HintPath>E:\Eplan\Platform\2026.0.3\Bin\Eplan.EplApi.Remotingu.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="Google.Protobuf">
+      <HintPath>E:\Eplan\Platform\2026.0.3\Bin\Google.Protobuf.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="Grpc.Core.Api">
+      <HintPath>E:\Eplan\Platform\2026.0.3\Bin\Grpc.Core.Api.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="Grpc.Core">
+      <HintPath>E:\Eplan\Platform\2026.0.3\Bin\Grpc.Core.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

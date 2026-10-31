@@ -1,140 +1,81 @@
 ﻿
 using System;
-using System.IO;
-using Eplan.EplApi.System;
-using Eplan.EplApi.DataModel;
-using Eplan.EplApi.Starter;
+using Eplan.EplApi.RemoteClient;
+using Eplan.EplApi.Remoting;
 
 namespace ReadProjectProperties
 {
     internal class Program
     {
-        [STAThread]
         static void Main(string[] args)
         {
-            EplApplication eplanApp = null;
-            bool initialized = false;
-
-            string platformBin =
-                @"E:\Eplan\Platform\2026.0.3\Bin";
-
-            string educationBin =
-                @"E:\Eplan\Education\2026.0.3\Bin";
+            EplanRemoteClient client = new EplanRemoteClient();
 
             try
             {
-                Console.WriteLine("Configuring EPLAN assembly resolver...");
+                string host = "192.168.29.54";
+                string port = "49152";
 
-                Environment.CurrentDirectory = platformBin;
+                Console.WriteLine("=================================");
+                Console.WriteLine("       EPLAN ACTION TESTER");
+                Console.WriteLine("=================================");
 
-                AssemblyResolver resolver = new AssemblyResolver();
+                Console.WriteLine("\nConnecting to EPLAN...");
 
-                resolver.SetEplanBinPath(educationBin);
-                resolver.PinToEplan();
+                client.Connect(host, port);
+                client.SynchronousMode = true;
 
-                Console.WriteLine("Platform Bin: " + resolver.GetPlatformBinPath());
-                Console.WriteLine("Variant Bin: " + resolver.GetEplanBinPath());
+                Console.WriteLine("Connected successfully!");
 
-                Console.WriteLine();
-                Console.WriteLine("Initializing EPLAN API...");
+                Console.WriteLine("\nTesting action: selectionset");
+                Console.WriteLine("Parameter: TYPE = PROJECT");
 
-                eplanApp = new EplApplication();
+                CallingContext context = new CallingContext();
+                context.Set("TYPE", "PROJECT");
 
-                eplanApp.EplanBinFolder = educationBin;
+                bool result = client.ExecuteAction(
+                    "selectionset",
+                    ref context
+                );
 
-                eplanApp.Init("");
+                Console.WriteLine("\n========== RESULT ==========");
 
-                initialized = true;
+                Console.WriteLine(
+                    "Action returned: " + result
+                );
 
-                Console.WriteLine("EPLAN API initialized!");
-                Console.WriteLine("Version: " + eplanApp.Version);
-                Console.WriteLine("Variant: " + eplanApp.Variant);
-
-                if (args.Length == 0)
+                if (result)
                 {
-                    Console.WriteLine("Please provide an EPLAN project path.");
-                    return;
+                    Console.WriteLine(
+                        "Action executed successfully."
+                    );
                 }
-
-                string projectPath = args[0];
-
-                Console.WriteLine();
-                Console.WriteLine("Project path: " + projectPath);
-
-                using (LockingStep lockingStep = new LockingStep())
+                else
                 {
-                    ProjectManager manager = new ProjectManager();
-
-                    Console.WriteLine("Opening project...");
-
-                    Project project = manager.OpenProject(projectPath);
-
-                    if (project == null)
-                        throw new Exception("Unable to open project.");
-
-                    Console.WriteLine("Project opened!");
-
-                    Console.WriteLine();
-                    Console.WriteLine("PROJECT INFORMATION");
-                    Console.WriteLine("===================");
-
-                    Console.WriteLine("Project Name: " + project.ProjectName);
-                    Console.WriteLine("Project Full Name: " + project.ProjectFullName);
-                    Console.WriteLine("Project Directory: " + project.ProjectDirectoryPath);
-
-                    Page[] pages = project.Pages;
-
-                    Console.WriteLine();
-                    Console.WriteLine("TOTAL PAGES: " + pages.Length);
-
-                    for (int i = 0; i < pages.Length; i++)
-                    {
-                        Console.WriteLine(
-                            (i + 1) + ". " + pages[i].Name);
-                    }
-
-                    string reportPath = Path.Combine(
-                        Environment.GetFolderPath(
-                            Environment.SpecialFolder.Desktop),
-                        "EplanProjectReport.txt");
-
-                    File.WriteAllText(
-                        reportPath,
-                        "Project Name: " + project.ProjectName +
-                        Environment.NewLine +
-                        "Project Full Name: " + project.ProjectFullName +
-                        Environment.NewLine +
-                        "Project Directory: " + project.ProjectDirectoryPath +
-                        Environment.NewLine +
-                        "Total Pages: " + pages.Length +
-                        Environment.NewLine +
-                        string.Join(
-                            Environment.NewLine,
-                            Array.ConvertAll(pages, p => p.Name)));
-
-                    Console.WriteLine();
-                    Console.WriteLine("Report saved: " + reportPath);
-
-                    project.Close();
+                    Console.WriteLine(
+                        "Action failed or is unavailable."
+                    );
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine();
-                Console.WriteLine("ERROR:");
+                Console.WriteLine("\nERROR:");
                 Console.WriteLine(ex.ToString());
             }
             finally
             {
-                if (initialized && eplanApp != null)
+                try
                 {
-                    Console.WriteLine("Shutting down EPLAN...");
-                    eplanApp.Exit();
+                    client.Disconnect();
+                    Console.WriteLine("\nDisconnected from EPLAN.");
+                }
+                catch
+                {
+                    // Connection may not have been established.
                 }
             }
 
-            Console.WriteLine();
-            Console.WriteLine("Press Enter to exit...");
+            Console.WriteLine("\nPress Enter to exit...");
             Console.ReadLine();
         }
     }
