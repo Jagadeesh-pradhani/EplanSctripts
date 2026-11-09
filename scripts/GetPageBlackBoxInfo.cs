@@ -1,4 +1,5 @@
 
+// Code to get the selected parts DT
 using Eplan.EplApi.ApplicationFramework;
 using Eplan.EplApi.Scripting;
 
