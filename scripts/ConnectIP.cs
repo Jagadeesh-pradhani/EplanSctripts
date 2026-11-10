@@ -11,6 +11,8 @@ public class IpLinker
 {
     private const string DefaultSourcePage = "=000+S1/320";
     private const string PageFile = @"E:\eplan_files\ip_page.txt";      // optional: other source page
+    // 8* -> 801_A, 801_B, 801_C, ...
+    // X2* -> X201_911_A, X201_911_B, ...
     private const string PlaceholderTag = "8*";
     private const string PlaceholderPlant = "000";
     private const string PlaceholderPlant2 = "001";
