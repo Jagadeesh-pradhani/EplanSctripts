@@ -44,11 +44,15 @@ namespace EplanRemoteTest
                 Console.WriteLine("EPLAN server is responding.");
 
                 // Execute EPLAN action
-                string actionName = "XPartsManagementStart";
+                string actionName = "reportGeneration";
 
                 Console.WriteLine("\nExecuting action: " + actionName);
+                string newDT = "=GEN+ST-A1";   // example new full device tag
+                string cmd = "XEsSetPropertyAction /PropertyId:20002 /PropertyIndex:0 /PropertyValue:\"" + newDT + "\"";
 
-                bool result = client.ExecuteAction(actionName);
+                bool result = client.ExecuteAction(cmd);
+
+                // bool result = client.ExecuteAction(actionName);
 
                 if (result)
                 {
