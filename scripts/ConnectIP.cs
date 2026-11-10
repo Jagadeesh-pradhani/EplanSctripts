@@ -13,6 +13,7 @@ public class IpLinker
     private const string PageFile = @"E:\eplan_files\ip_page.txt";      // optional: other source page
     private const string PlaceholderTag = "8*";
     private const string PlaceholderPlant = "000";
+    private const string PlaceholderPlant2 = "001";
     private const string ReportFile = @"E:\eplan_files\ip_link_report.txt";
 
     private class Ip
@@ -230,7 +231,9 @@ public class IpLinker
         foreach (Ip ip in all)
         {
             if (ip.Tag != PlaceholderTag) continue;
-            if (ip.Plant != "" && ip.Plant != PlaceholderPlant) continue;
+            // Uncomment below if you want to replace from only specific structure
+            // if (ip.Plant != "" && ip.Plant != PlaceholderPlant && ip.Plant != PlaceholderPlant2) continue;
+            if (ip.Plant == "") continue;
             targets.Add(ip);
         }
         targets.Sort(delegate(Ip a, Ip b)
